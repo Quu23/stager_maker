@@ -187,7 +187,6 @@ public class Window extends JFrame{
                         int x = sc.nextInt();
                         int y = stagePos % 780;
                         int page = (stagePos-y)/780;
-                        System.out.println(stagePos);
                         App.entities.add(new Entity(x, y, kind, page));
 
                         sc.nextLine();
@@ -245,7 +244,7 @@ public class Window extends JFrame{
 
         for (Entity entity : App.entities) {
             if (entity.page == this.page){
-                g.drawImage(entity.img,entity.x,entity.y,null);
+                g.drawImage(EntityImages.getImage(entity.kind),entity.x,entity.y,null);
             }
         }
 
