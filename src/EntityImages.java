@@ -37,6 +37,10 @@ public class EntityImages {
                 path = "img/Trunback_Enemy.png";
                 break;
 
+            case EntityKind.CYCLONE_ENEMY:
+                path = "img/Cyclone_Enemy.png";
+                break;
+
             case EntityKind.CLEAR_ENEMIES_ITEM:
                 path = "img/Clear_Enemies_Item.png";
                 break;
