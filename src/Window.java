@@ -155,8 +155,8 @@ public class Window extends JFrame{
                         Entity entity = saveDatas.get(i);
 
                         int isEnemy = 0;
-                        if(entity.kind >= 10){
-                            entity.kind -= 10;
+                        if(entity.kind >= EntityKind.CLEAR_ENEMIES_ITEM){
+                            entity.kind -= EntityKind.CLEAR_ENEMIES_ITEM;
                             isEnemy = 1;
                         }
                         saveWriter.write(entity.y+","+isEnemy+","+entity.kind+","+entity.x+",");
@@ -183,7 +183,7 @@ public class Window extends JFrame{
                         //次の行を読み込み
                         int stagePos = sc.nextInt();
                         int flag = sc.nextInt();
-                        int kind = sc.nextInt() + (flag == 1 ? 10 : 0);
+                        int kind = sc.nextInt() + (flag == 1 ? EntityKind.CLEAR_ENEMIES_ITEM : 0);
                         int x = sc.nextInt();
                         int y = stagePos % 780;
                         int page = (stagePos-y)/780;
@@ -239,12 +239,16 @@ public class Window extends JFrame{
         }
 
         if (App.nowEntity != EntityKind.NONE){
-            g.drawImage(App.tempImage, (int)App.mousePoint.getX(), (int)App.mousePoint.getY(), null);
+            if (App.nowEntity == EntityKind.CYCLONE_ENEMY){
+                g.drawImage(App.tempImage, (int)App.mousePoint.getX(), (int)App.mousePoint.getY(), 32, 32, null);
+            }else{
+                g.drawImage(App.tempImage, (int)App.mousePoint.getX(), (int)App.mousePoint.getY(), null);
+            }          
         }
 
         for (Entity entity : App.entities) {
             if (entity.page == this.page){
-                g.drawImage(EntityImages.getImage(entity.kind),entity.x,entity.y,null);
+                g.drawImage(EntityImages.getImage(entity.kind),entity.x,entity.y, entity.r*2, entity.r*2,null);
             }
         }
 
