@@ -31,6 +31,8 @@ public class Window extends JFrame{
 
     private int page;
 
+    public boolean[] hasWall = {false,false,false,false,false,false,false,};
+
     static{
         java.awt.GraphicsEnvironment env = java.awt.GraphicsEnvironment.getLocalGraphicsEnvironment();
         java.awt.DisplayMode displayMode = env.getDefaultScreenDevice().getDisplayMode();
@@ -78,13 +80,16 @@ public class Window extends JFrame{
                             }
                         }
                         break;
+                    case 4:
+                        hasWall[page] = !hasWall[page];
+                        break;
                     default:
-                    if(App.nowEntity < EntityKind.SPEED_UP_ITEM){
-                        App.nowEntity++;
-                        App.tempImage = EntityImages.getImage(App.nowEntity);
-                    }else{
-                        App.nowEntity = EntityKind.BIG_ENEMY;
-                    }
+                        if(App.nowEntity < EntityKind.SPEED_UP_ITEM){
+                            App.nowEntity++;
+                            App.tempImage = EntityImages.getImage(App.nowEntity);
+                        }else{
+                            App.nowEntity = EntityKind.BIG_ENEMY;
+                        }
                 }
             }
             @Override
@@ -104,6 +109,7 @@ public class Window extends JFrame{
                 
             }
         });
+
         this.addMouseWheelListener(e -> {
             //手前に回す
             if(e.getWheelRotation() == 1){
@@ -150,6 +156,14 @@ public class Window extends JFrame{
                 }
                 try (Writer saveWriter = new BufferedWriter(new FileWriter(newData));) {
                     //save処理
+
+                    for (int i = 0; i < hasWall.length; i++) {
+                        if(hasWall[i]){
+                            saveWriter.write("-1,"+i+",-1,-1,");
+                            saveWriter.write("\n");
+                        }
+                    }
+
                     //stage_position(int) , 0 / 1 , enemy_type(EnemyType) / item_type(ItemType) , x (int)  \n
                     List<Entity> saveDatas = new ArrayList<Entity>(App.entities.size());
                     for (Entity entity : App.entities) {
@@ -194,6 +208,14 @@ public class Window extends JFrame{
                     while(sc.hasNextLine()){
                         //次の行を読み込み
                         int stagePos = sc.nextInt();
+                        
+                        if (stagePos == -1){
+                            int index = sc.nextInt();
+                            hasWall[index] = true;
+                            sc.nextLine();
+                            continue;
+                        }
+
                         int flag = sc.nextInt();
                         int kind = sc.nextInt() + (flag == 1 ? EntityKind.CLEAR_ENEMIES_ITEM : 0);
                         int x = sc.nextInt();
@@ -240,6 +262,17 @@ public class Window extends JFrame{
     }
 
     private void draw(Graphics g){
+
+        System.out.println(Arrays.toString(hasWall));
+
+        if(hasWall[page]){
+            g.setColor(Color.ORANGE);
+
+            g.fillRect(0, 0, 50, 780);
+            g.fillRect(1500-70, 0,50, 780);
+
+            g.setColor(Color.BLACK);
+        }
         
         g.setColor(Color.black);
         for (int i = 0;i<800;i+=10){
@@ -260,7 +293,7 @@ public class Window extends JFrame{
 
         for (Entity entity : App.entities) {
             if (entity.page == this.page){
-                g.drawImage(EntityImages.getImage(entity.kind),entity.x,entity.y, (int)(entity.r*2 * ratioWidthOfRealWindowSize), (int)(entity.r*2*ratioHeightOfRealWindowSize),null);
+                g.drawImage(EntityImages.getImage(entity.kind),entity.x,entity.y, (int)(entity.r*2 * ratioWidthOfRealWindowSize), (int)(entity.r*2 * ratioHeightOfRealWindowSize),null);
             }
         }
 
