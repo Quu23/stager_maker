@@ -23,9 +23,21 @@ public class Window extends JFrame{
     public JPanel drawPanel;
     private JPanel settingPanel;
 
+    // 画面サイズ÷実際のPCのウィンドウサイズ
+    public static double ratioWidthOfRealWindowSize;
+    public static double ratioHeightOfRealWindowSize;
+
     private JButton[] settingButtons;
 
     private int page;
+
+    static{
+        java.awt.GraphicsEnvironment env = java.awt.GraphicsEnvironment.getLocalGraphicsEnvironment();
+        java.awt.DisplayMode displayMode = env.getDefaultScreenDevice().getDisplayMode();
+        // 変数widthとheightに画面の解像度の幅と高さを代入
+        ratioWidthOfRealWindowSize  = (double)1500 / displayMode.getWidth();
+        ratioHeightOfRealWindowSize = (double)780  / displayMode.getHeight();
+    }
 
     Window(){
         this.setTitle("stage maker");
@@ -248,7 +260,7 @@ public class Window extends JFrame{
 
         for (Entity entity : App.entities) {
             if (entity.page == this.page){
-                g.drawImage(EntityImages.getImage(entity.kind),entity.x,entity.y, entity.r*2, entity.r*2,null);
+                g.drawImage(EntityImages.getImage(entity.kind),entity.x,entity.y, (int)(entity.r*2 * ratioWidthOfRealWindowSize), (int)(entity.r*2*ratioHeightOfRealWindowSize),null);
             }
         }
 
