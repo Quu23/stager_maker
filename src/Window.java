@@ -25,8 +25,11 @@ public class Window extends JFrame{
     public JPanel drawPanel;
     private JPanel settingPanel;
 
-    public static int moveableLeftX  = 400;
-    public static int moveableRightX = 1600 - 400;
+    public static int moveableLeftX;
+    public static int moveableRightX;
+
+    public static int windowWidth;
+    public static int windowHeight;
 
     // 画面サイズ÷実際のPCのウィンドウサイズ
     public static double ratioWidthOfRealWindowSize;
@@ -41,16 +44,24 @@ public class Window extends JFrame{
     public boolean[] hasWall = {false,false,false,false,false,false,false,};
 
     static{
+        windowWidth = 1600;
+        windowHeight = 900;
+
+        if (windowWidth / windowHeight != 16/9) throw new IllegalArgumentException("設定したWindowの幅と高さの比が16:9になっていません。");
+
+        moveableLeftX  = windowWidth / 4;
+        moveableRightX = windowWidth - moveableLeftX; 
+
         java.awt.GraphicsEnvironment env = java.awt.GraphicsEnvironment.getLocalGraphicsEnvironment();
         java.awt.DisplayMode displayMode = env.getDefaultScreenDevice().getDisplayMode();
         // 変数widthとheightに画面の解像度の幅と高さを代入
-        ratioWidthOfRealWindowSize  = (double)1600 / displayMode.getWidth();
-        ratioHeightOfRealWindowSize = (double)900  / displayMode.getHeight();
+        ratioWidthOfRealWindowSize  = (double)windowWidth  / displayMode.getWidth();
+        ratioHeightOfRealWindowSize = (double)windowHeight / displayMode.getHeight();
     }
 
     Window(){
         this.setTitle("stage maker");
-        this.setSize(1600, 900);
+        this.setSize(windowWidth, windowHeight);
         this.setResizable(false);
         this.setLocationRelativeTo(null);
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -150,12 +161,14 @@ public class Window extends JFrame{
         this.settingPanel = new JPanel();
         this.settingPanel.setBackground(Color.CYAN);
 
-        isLineMode = new JCheckBox("LINE:");
+        this.isLineMode = new JCheckBox("LINE:");
+        this.isLineMode.setBackground(Color.CYAN);
         this.settingPanel.add(isLineMode);
 
-        lineCounter = new JSlider(2, 10, 2);
-        lineCounter.setLabelTable(lineCounter.createStandardLabels(1));
-        lineCounter.setPaintLabels(true);
+        this.lineCounter = new JSlider(2, 10, 2);
+        this.lineCounter.setLabelTable(lineCounter.createStandardLabels(1));
+        this.lineCounter.setPaintLabels(true);
+        this.lineCounter.setBackground(Color.CYAN);
         this.settingPanel.add(lineCounter);
         
         {
@@ -196,7 +209,7 @@ public class Window extends JFrame{
                         saveDatas.add(new Entity(entity));
                     }
                     for (Entity entity : saveDatas) {
-                        entity.y += 780 * entity.page;
+                        entity.y += windowHeight * entity.page;
                     }
                     saveDatas.sort((en1, en2) -> {
                         if (en1.y > en2.y)return 1;
@@ -245,8 +258,8 @@ public class Window extends JFrame{
                         int flag = sc.nextInt();
                         int kind = sc.nextInt() + (flag == 1 ? EntityKind.CLEAR_ENEMIES_ITEM : 0);
                         int x = sc.nextInt();
-                        int y = stagePos % 780;
-                        int page = (stagePos-y)/780;
+                        int y = stagePos % windowHeight;
+                        int page = (stagePos-y) / windowHeight;
                         App.entities.add(new Entity(x, y, kind, page));
 
                         sc.nextLine();
@@ -294,23 +307,23 @@ public class Window extends JFrame{
         if(hasWall[page]){
             g.setColor(Color.ORANGE);
 
-            g.fillRect(moveableLeftX, 0, 50, 900);
-            g.fillRect(moveableRightX - 50, 0,50, 900);
+            g.fillRect(moveableLeftX, 0, 50, windowHeight);
+            g.fillRect(moveableRightX - 50, 0,50, windowHeight);
 
             g.setColor(Color.BLACK);
         }
 
         g.setColor(Color.CYAN);
-        g.fillRect(0, 0, moveableLeftX, 900);
-        g.fillRect(moveableRightX, 0, 1600 - moveableRightX, 900);
+        g.fillRect(0, 0, moveableLeftX, windowHeight);
+        g.fillRect(moveableRightX, 0, windowWidth - moveableRightX, windowHeight);
         
         g.setColor(Color.black);
-        for (int i = 0;i<900;i+=10){
-            g.drawLine(0, i, 1600, i);
-            for (int j = 0; j < 1600; j+=10) {
-                g.drawLine(j, 0, j, 900);
+        for (int i = 0;i<windowHeight;i+=10){
+            g.drawLine(0, i, windowWidth, i);
+            for (int j = 0; j < windowWidth; j+=10) {
+                g.drawLine(j, 0, j, windowHeight);
             }
-            g.drawString("y="+i, 1550, i);
+            g.drawString("y="+i, windowWidth - 50, i);
         }
 
         if (App.nowEntity != EntityKind.NONE){
