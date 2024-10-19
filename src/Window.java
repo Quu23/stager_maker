@@ -23,6 +23,9 @@ public class Window extends JFrame{
     public JPanel drawPanel;
     private JPanel settingPanel;
 
+    public static int moveableLeftX  = 400;
+    public static int moveableRightX = 1600 - 400;
+
     // 画面サイズ÷実際のPCのウィンドウサイズ
     public static double ratioWidthOfRealWindowSize;
     public static double ratioHeightOfRealWindowSize;
@@ -43,7 +46,7 @@ public class Window extends JFrame{
 
     Window(){
         this.setTitle("stage maker");
-        this.setSize(1500, 780);
+        this.setSize(1600, 900);
         this.setResizable(false);
         this.setLocationRelativeTo(null);
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -65,7 +68,7 @@ public class Window extends JFrame{
                 switch(e.getButton()){
                     //左クリック
                     case MouseEvent.BUTTON1:
-                        if(App.nowEntity==EntityKind.NONE)return;
+                        if(App.nowEntity==EntityKind.NONE || e.getX() < moveableLeftX || e.getX() > moveableRightX)return;
                         int formattedX = e.getX() - e.getX()%10;
                         int formattedY = e.getY() - e.getY()%10; 
                         App.entities.add(new Entity(formattedX, formattedY, App.nowEntity,page));
@@ -270,19 +273,23 @@ public class Window extends JFrame{
         if(hasWall[page]){
             g.setColor(Color.ORANGE);
 
-            g.fillRect(0, 0, 50, 780);
-            g.fillRect(1500-70, 0,50, 780);
+            g.fillRect(moveableLeftX, 0, 50, 900);
+            g.fillRect(moveableRightX - 50, 0,50, 900);
 
             g.setColor(Color.BLACK);
         }
+
+        g.setColor(Color.CYAN);
+        g.fillRect(0, 0, moveableLeftX, 900);
+        g.fillRect(moveableRightX, 0, 1600 - moveableRightX, 900);
         
         g.setColor(Color.black);
-        for (int i = 0;i<800;i+=10){
-            g.drawLine(0, i, 1500, i);
-            for (int j = 0; j < 1500; j+=10) {
-                g.drawLine(j, 0, j, 800);
+        for (int i = 0;i<900;i+=10){
+            g.drawLine(0, i, 1600, i);
+            for (int j = 0; j < 1600; j+=10) {
+                g.drawLine(j, 0, j, 900);
             }
-            g.drawString("y="+i, 1450, i);
+            g.drawString("y="+i, 1550, i);
         }
 
         if (App.nowEntity != EntityKind.NONE){
@@ -292,7 +299,7 @@ public class Window extends JFrame{
                 g.drawImage(App.tempImage, (int)App.mousePoint.getX(), (int)App.mousePoint.getY(), null);
             }          
             g.setColor(Color.BLUE);
-            g.fillOval((int)App.mousePoint.getX(), (int)App.mousePoint.getY(), 5, 5);
+            g.fillOval((int)App.mousePoint.getX() - 5, (int)App.mousePoint.getY() -5 , 10, 10);
             g.setColor(Color.BLACK);
         }
 
