@@ -28,7 +28,7 @@ public class App {
             public void actionPerformed(ActionEvent e) {
                 win.drawPanel.repaint();
                 mousePoint = MouseInfo.getPointerInfo().getLocation();
-                SwingUtilities.convertPointFromScreen(mousePoint, win);
+                SwingUtilities.convertPointFromScreen(mousePoint, win.drawPanel);
             }
         });
 

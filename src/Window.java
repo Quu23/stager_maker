@@ -66,7 +66,9 @@ public class Window extends JFrame{
                     //左クリック
                     case MouseEvent.BUTTON1:
                         if(App.nowEntity==EntityKind.NONE)return;
-                        App.entities.add(new Entity(e.getX(), e.getY(), App.nowEntity,page));
+                        int formattedX = e.getX() - e.getX()%10;
+                        int formattedY = e.getY() - e.getY()%10; 
+                        App.entities.add(new Entity(formattedX, formattedY, App.nowEntity,page));
                         break;
                     case MouseEvent.BUTTON2:
                         App.nowEntity = 0;
@@ -289,6 +291,9 @@ public class Window extends JFrame{
             }else{
                 g.drawImage(App.tempImage, (int)App.mousePoint.getX(), (int)App.mousePoint.getY(), null);
             }          
+            g.setColor(Color.BLUE);
+            g.fillOval((int)App.mousePoint.getX(), (int)App.mousePoint.getY(), 5, 5);
+            g.setColor(Color.BLACK);
         }
 
         for (Entity entity : App.entities) {
