@@ -37,8 +37,8 @@ public class Window extends JFrame{
         java.awt.GraphicsEnvironment env = java.awt.GraphicsEnvironment.getLocalGraphicsEnvironment();
         java.awt.DisplayMode displayMode = env.getDefaultScreenDevice().getDisplayMode();
         // 変数widthとheightに画面の解像度の幅と高さを代入
-        ratioWidthOfRealWindowSize  = (double)1500 / displayMode.getWidth();
-        ratioHeightOfRealWindowSize = (double)780  / displayMode.getHeight();
+        ratioWidthOfRealWindowSize  = (double)1600 / displayMode.getWidth();
+        ratioHeightOfRealWindowSize = (double)900  / displayMode.getHeight();
     }
 
     Window(){
