@@ -1,6 +1,8 @@
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JSlider;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -30,6 +32,8 @@ public class Window extends JFrame{
     public static double ratioWidthOfRealWindowSize;
     public static double ratioHeightOfRealWindowSize;
 
+    private JCheckBox isLineMode;
+    private JSlider lineCounter;
     private JButton[] settingButtons;
 
     private int page;
@@ -68,10 +72,19 @@ public class Window extends JFrame{
                 switch(e.getButton()){
                     //左クリック
                     case MouseEvent.BUTTON1:
-                        if(App.nowEntity==EntityKind.NONE || e.getX() < moveableLeftX || e.getX() > moveableRightX)return;
+                        if(App.nowEntity==EntityKind.NONE || e.getX() < moveableLeftX || e.getX() > moveableRightX )return;
+                        
                         int formattedX = e.getX() - e.getX()%10;
                         int formattedY = e.getY() - e.getY()%10; 
                         App.entities.add(new Entity(formattedX, formattedY, App.nowEntity,page));
+                        if (isLineMode.isSelected()){
+                            for (int i = 1; i < lineCounter.getValue() ; i++){
+                                int formattedLeftX  = formattedX - 20 * i;
+                                if (formattedLeftX > moveableLeftX) App.entities.add(new Entity(formattedLeftX, formattedY, App.nowEntity,page));
+                                int formattedRightX = formattedX + 20 * i;
+                                if (formattedRightX < moveableRightX) App.entities.add(new Entity(formattedRightX, formattedY, App.nowEntity,page));
+                            }
+                        }
                         break;
                     case MouseEvent.BUTTON2:
                         App.nowEntity = 0;
@@ -136,6 +149,14 @@ public class Window extends JFrame{
 
         this.settingPanel = new JPanel();
         this.settingPanel.setBackground(Color.CYAN);
+
+        isLineMode = new JCheckBox("LINE:");
+        this.settingPanel.add(isLineMode);
+
+        lineCounter = new JSlider(2, 10, 2);
+        lineCounter.setLabelTable(lineCounter.createStandardLabels(1));
+        lineCounter.setPaintLabels(true);
+        this.settingPanel.add(lineCounter);
         
         {
             JButton[] tmp_buttons = {
