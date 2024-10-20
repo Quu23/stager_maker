@@ -212,7 +212,7 @@ public class Window extends JFrame{
                         saveDatas.add(new Entity(entity));
                     }
                     for (Entity entity : saveDatas) {
-                        entity.y += windowHeight * entity.page;
+                        entity.y = (windowHeight - entity.y) + windowHeight * entity.page;
                     }
                     saveDatas.sort((en1, en2) -> {
                         if (en1.y > en2.y)return 1;
@@ -264,8 +264,9 @@ public class Window extends JFrame{
                         int flag = sc.nextInt();
                         int kind = sc.nextInt() + (flag == 1 ? EntityKind.CLEAR_ENEMIES_ITEM : 0);
                         int x = sc.nextInt();
-                        int y = stagePos % windowHeight;
-                        int page = (stagePos-y) / windowHeight;
+                        int realY = stagePos % windowHeight;
+                        int y = windowHeight - realY;
+                        int page = (stagePos-realY) / windowHeight;
                         App.entities.add(new Entity(x, y, kind, page));
 
                         sc.nextLine();
