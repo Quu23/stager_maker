@@ -181,6 +181,9 @@ public class Window extends JFrame{
             };
             this.settingButtons = tmp_buttons;
         }
+
+        this.settingButtons[0].setBackground(Color.RED);
+        this.settingButtons[0].setForeground(Color.WHITE);
         this.settingButtons[0].addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -233,6 +236,9 @@ public class Window extends JFrame{
                 }
             }
         });
+
+        this.settingButtons[1].setBackground(Color.RED);
+        this.settingButtons[1].setForeground(Color.WHITE);
         this.settingButtons[1].addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -281,6 +287,8 @@ public class Window extends JFrame{
                 if(page < 7)page++;
             }
         });
+
+        this.settingButtons[4].setBackground(Color.YELLOW);
         this.settingButtons[4].addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
