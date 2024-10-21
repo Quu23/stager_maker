@@ -57,6 +57,10 @@ public class Entity {
             case EntityKind.CYCLONE_ENEMY:
                 r = 16;
                 break;
+            case EntityKind.LASER_ENEMY:
+                r = 20;
+                break;
+
 
             case EntityKind.CLEAR_ENEMIES_ITEM:
                 r = 16;

@@ -1,6 +1,8 @@
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JSlider;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -23,10 +25,18 @@ public class Window extends JFrame{
     public JPanel drawPanel;
     private JPanel settingPanel;
 
+    public static int moveableLeftX;
+    public static int moveableRightX;
+
+    public static int windowWidth;
+    public static int windowHeight;
+
     // 画面サイズ÷実際のPCのウィンドウサイズ
     public static double ratioWidthOfRealWindowSize;
     public static double ratioHeightOfRealWindowSize;
 
+    private JCheckBox isLineMode;
+    private JSlider lineCounter;
     private JButton[] settingButtons;
 
     private int page;
@@ -34,16 +44,24 @@ public class Window extends JFrame{
     public boolean[] hasWall = {false,false,false,false,false,false,false,};
 
     static{
+        windowWidth = 1600;
+        windowHeight = 900;
+
+        if (windowWidth / windowHeight != 16/9) throw new IllegalArgumentException("設定したWindowの幅と高さの比が16:9になっていません。");
+
+        moveableLeftX  = windowWidth / 4;
+        moveableRightX = windowWidth - moveableLeftX; 
+
         java.awt.GraphicsEnvironment env = java.awt.GraphicsEnvironment.getLocalGraphicsEnvironment();
         java.awt.DisplayMode displayMode = env.getDefaultScreenDevice().getDisplayMode();
         // 変数widthとheightに画面の解像度の幅と高さを代入
-        ratioWidthOfRealWindowSize  = (double)1500 / displayMode.getWidth();
-        ratioHeightOfRealWindowSize = (double)780  / displayMode.getHeight();
+        ratioWidthOfRealWindowSize  = (double)windowWidth  / displayMode.getWidth();
+        ratioHeightOfRealWindowSize = (double)windowHeight / displayMode.getHeight();
     }
 
     Window(){
         this.setTitle("stage maker");
-        this.setSize(1500, 780);
+        this.setSize(windowWidth, windowHeight);
         this.setResizable(false);
         this.setLocationRelativeTo(null);
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -65,8 +83,19 @@ public class Window extends JFrame{
                 switch(e.getButton()){
                     //左クリック
                     case MouseEvent.BUTTON1:
-                        if(App.nowEntity==EntityKind.NONE)return;
-                        App.entities.add(new Entity(e.getX(), e.getY(), App.nowEntity,page));
+                        if(App.nowEntity==EntityKind.NONE || e.getX() < moveableLeftX || e.getX() > moveableRightX )return;
+                        
+                        int formattedX = e.getX() - e.getX()%10;
+                        int formattedY = e.getY() - e.getY()%10; 
+                        App.entities.add(new Entity(formattedX, formattedY, App.nowEntity,page));
+                        if (isLineMode.isSelected()){
+                            for (int i = 1; i < lineCounter.getValue() ; i++){
+                                int formattedLeftX  = formattedX - 20 * i;
+                                if (formattedLeftX > moveableLeftX) App.entities.add(new Entity(formattedLeftX, formattedY, App.nowEntity,page));
+                                int formattedRightX = formattedX + 20 * i;
+                                if (formattedRightX < moveableRightX) App.entities.add(new Entity(formattedRightX, formattedY, App.nowEntity,page));
+                            }
+                        }
                         break;
                     case MouseEvent.BUTTON2:
                         App.nowEntity = 0;
@@ -131,6 +160,16 @@ public class Window extends JFrame{
 
         this.settingPanel = new JPanel();
         this.settingPanel.setBackground(Color.CYAN);
+
+        this.isLineMode = new JCheckBox("LINE:");
+        this.isLineMode.setBackground(Color.CYAN);
+        this.settingPanel.add(isLineMode);
+
+        this.lineCounter = new JSlider(2, 10, 2);
+        this.lineCounter.setLabelTable(lineCounter.createStandardLabels(1));
+        this.lineCounter.setPaintLabels(true);
+        this.lineCounter.setBackground(Color.CYAN);
+        this.settingPanel.add(lineCounter);
         
         {
             JButton[] tmp_buttons = {
@@ -142,6 +181,9 @@ public class Window extends JFrame{
             };
             this.settingButtons = tmp_buttons;
         }
+
+        this.settingButtons[0].setBackground(Color.RED);
+        this.settingButtons[0].setForeground(Color.WHITE);
         this.settingButtons[0].addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -170,7 +212,7 @@ public class Window extends JFrame{
                         saveDatas.add(new Entity(entity));
                     }
                     for (Entity entity : saveDatas) {
-                        entity.y += 780 * entity.page;
+                        entity.y = (windowHeight - entity.y) + windowHeight * entity.page;
                     }
                     saveDatas.sort((en1, en2) -> {
                         if (en1.y > en2.y)return 1;
@@ -194,6 +236,9 @@ public class Window extends JFrame{
                 }
             }
         });
+
+        this.settingButtons[1].setBackground(Color.RED);
+        this.settingButtons[1].setForeground(Color.WHITE);
         this.settingButtons[1].addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -219,8 +264,9 @@ public class Window extends JFrame{
                         int flag = sc.nextInt();
                         int kind = sc.nextInt() + (flag == 1 ? EntityKind.CLEAR_ENEMIES_ITEM : 0);
                         int x = sc.nextInt();
-                        int y = stagePos % 780;
-                        int page = (stagePos-y)/780;
+                        int realY = stagePos % windowHeight;
+                        int y = windowHeight - realY;
+                        int page = (stagePos-realY) / windowHeight;
                         App.entities.add(new Entity(x, y, kind, page));
 
                         sc.nextLine();
@@ -242,6 +288,8 @@ public class Window extends JFrame{
                 if(page < 7)page++;
             }
         });
+
+        this.settingButtons[4].setBackground(Color.YELLOW);
         this.settingButtons[4].addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -268,19 +316,23 @@ public class Window extends JFrame{
         if(hasWall[page]){
             g.setColor(Color.ORANGE);
 
-            g.fillRect(0, 0, 50, 780);
-            g.fillRect(1500-70, 0,50, 780);
+            g.fillRect(moveableLeftX, 0, 50, windowHeight);
+            g.fillRect(moveableRightX - 50, 0,50, windowHeight);
 
             g.setColor(Color.BLACK);
         }
+
+        g.setColor(Color.CYAN);
+        g.fillRect(0, 0, moveableLeftX, windowHeight);
+        g.fillRect(moveableRightX, 0, windowWidth - moveableRightX, windowHeight);
         
         g.setColor(Color.black);
-        for (int i = 0;i<800;i+=10){
-            g.drawLine(0, i, 1500, i);
-            for (int j = 0; j < 1500; j+=10) {
-                g.drawLine(j, 0, j, 800);
+        for (int i = 0;i<windowHeight;i+=10){
+            g.drawLine(0, i, windowWidth, i);
+            for (int j = 0; j < windowWidth; j+=10) {
+                g.drawLine(j, 0, j, windowHeight);
             }
-            g.drawString("y="+i, 1450, i);
+            g.drawString("y="+i, windowWidth - 50, i);
         }
 
         if (App.nowEntity != EntityKind.NONE){
@@ -289,6 +341,9 @@ public class Window extends JFrame{
             }else{
                 g.drawImage(App.tempImage, (int)App.mousePoint.getX(), (int)App.mousePoint.getY(), null);
             }          
+            g.setColor(Color.BLUE);
+            g.fillOval((int)App.mousePoint.getX() - 5, (int)App.mousePoint.getY() -5 , 10, 10);
+            g.setColor(Color.BLACK);
         }
 
         for (Entity entity : App.entities) {
