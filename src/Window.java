@@ -104,7 +104,7 @@ public class Window extends JFrame{
                     case MouseEvent.BUTTON3:
                         for (int i = App.entities.size() - 1; i >= 0 ; i--) {
                             Entity entity = App.entities.get(i);
-                            if(entity.isPointed(e.getX(), e.getY())){
+                            if(entity.isPointed(e.getX(), e.getY()) && entity.page == page){
                                 App.entities.remove(entity);
                             }
                         }
@@ -212,11 +212,11 @@ public class Window extends JFrame{
                         saveDatas.add(new Entity(entity));
                     }
                     for (Entity entity : saveDatas) {
-                        entity.y = (windowHeight - entity.y) + windowHeight * entity.page;
+                        entity.y += windowHeight * entity.page;
                     }
                     saveDatas.sort((en1, en2) -> {
-                        if (en1.y > en2.y)return 1;
-                        if (en1.y < en2.y)return -1;
+                        if (en1.y > en2.y)return -1;
+                        if (en1.y < en2.y)return 1;
                         return 0;
                     });
                     for (int i=0;i<saveDatas.size();i++) {
@@ -264,9 +264,8 @@ public class Window extends JFrame{
                         int flag = sc.nextInt();
                         int kind = sc.nextInt() + (flag == 1 ? EntityKind.CLEAR_ENEMIES_ITEM : 0);
                         int x = sc.nextInt();
-                        int realY = stagePos % windowHeight;
-                        int y = windowHeight - realY;
-                        int page = (stagePos-realY) / windowHeight;
+                        int y = stagePos % windowHeight;
+                        int page = (stagePos-y) / windowHeight;
                         App.entities.add(new Entity(x, y, kind, page));
 
                         sc.nextLine();
@@ -353,12 +352,13 @@ public class Window extends JFrame{
         }
 
         g.setColor(Color.CYAN);
-        g.fillRect(10, 0, 50,30);
+        g.fillRect(10, 0, 50,40);
 
         g.setColor(Color.red);
         g.drawString("page:" + page, 10, 10);
         g.drawString(App.mousePoint.x+":"+App.mousePoint.y , 10,20);
         g.drawString(App.nowEntity + "",10,30);
+        g.drawString(App.entities.size() + "",10,40);
     }
 
 
