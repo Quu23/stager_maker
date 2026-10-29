@@ -13,15 +13,20 @@ public class EntityKind {
     public static final int TURNBACK_ENEMY      = 9;
     public static final int CYCLONE_ENEMY       = 10;
     public static final int LASER_ENEMY         = 11;
+    public static final int WALL_ENEMY          = 12;
+    public static final int WARP_ENEMY          = 13;
 
-    public static final int CLEAR_ENEMIES_ITEM  = 12;
-    public static final int DESTROY_ITEM        = 13;
-    public static final int EXP_ORB             = 14;
-    public static final int HEALING_ITEM        = 15;
-    public static final int INVINCIBLE_ITEM     = 16;
-    public static final int SCORE_BOOSTER_ITEM  = 17;
-    public static final int SHOT_RATE_DOWN_ITEM = 18;
-    public static final int SHOT_RATE_UP_ITEM   = 19;
-    public static final int SPEED_DOWN_ITEM     = 20;
-    public static final int SPEED_UP_ITEM       = 21;
+    public static final int CLEAR_ENEMIES_ITEM  = 52;
+    public static final int DESTROY_ITEM        = 53;
+    public static final int EXP_ORB             = 54;
+    public static final int HEALING_ITEM        = 55;
+    public static final int INVINCIBLE_ITEM     = 56;
+    public static final int SCORE_BOOSTER_ITEM  = 57;
+    public static final int SHOT_RATE_DOWN_ITEM = 58;
+    public static final int SHOT_RATE_UP_ITEM   = 59;
+    public static final int SPEED_DOWN_ITEM     = 60;
+    public static final int SPEED_UP_ITEM       = 61;
+    public static final int OCTPATH             = 62;
+    public static final int REVERSE_ITEM        = 63;
+
 }

@@ -145,11 +145,11 @@ public class Window extends JFrame{
                 if(App.nowEntity > 0){
                     App.nowEntity--;
                 }else{
-                    App.nowEntity = EntityKind.SPEED_UP_ITEM;
+                    App.nowEntity = EntityKind.REVERSE_ITEM;
                 }
                 App.tempImage = EntityImages.getImage(App.nowEntity);
             }else if(e.getWheelRotation() == -1){
-                if(App.nowEntity < EntityKind.SPEED_UP_ITEM){
+                if(App.nowEntity < EntityKind.REVERSE_ITEM){
                     App.nowEntity++;
                 }else{
                     App.nowEntity = EntityKind.BIG_ENEMY;

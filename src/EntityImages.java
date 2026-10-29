@@ -42,6 +42,12 @@ public class EntityImages {
             case EntityKind.LASER_ENEMY:
                 path = "img/Laser_Enemy.png";
                 break;
+            case EntityKind.WALL_ENEMY:
+                path = "img/Wall_Enemy.png";
+                break;
+            case EntityKind.WARP_ENEMY:
+                path = "img/Warp_Enemy.png";
+                break;
 
             case EntityKind.CLEAR_ENEMIES_ITEM:
                 path = "img/Clear_Enemies_Item.png";
@@ -73,6 +79,11 @@ public class EntityImages {
             case EntityKind.SPEED_UP_ITEM:
                 path = "img/Speed_Up_Item.png";
                 break;
+            case EntityKind.OCTPATH:
+                path = "img/OctPath.png";
+                break;
+            case EntityKind.REVERSE_ITEM:
+                path = "img/Reverse_Item.png";
             default : 
                 path = "";
                 throw new IllegalArgumentException("アイテムを指定してください。");
