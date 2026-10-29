@@ -84,9 +84,10 @@ public class EntityImages {
                 break;
             case EntityKind.REVERSE_ITEM:
                 path = "img/Reverse_Item.png";
+                break;
             default : 
                 path = "";
-                throw new IllegalArgumentException("アイテムを指定してください。");
+                throw new IllegalArgumentException("アイテムを指定してください。" + kind);
         }
 
         return Toolkit.getDefaultToolkit().getImage(path);

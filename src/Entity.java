@@ -60,6 +60,12 @@ public class Entity {
             case EntityKind.LASER_ENEMY:
                 r = 20;
                 break;
+            case EntityKind.WALL_ENEMY:
+                r = 20;
+                break;
+            case EntityKind.WARP_ENEMY:
+                r = 20;
+                break;
 
 
             case EntityKind.CLEAR_ENEMIES_ITEM:
@@ -90,6 +96,12 @@ public class Entity {
                 r = 16;
                 break;
             case EntityKind.SPEED_UP_ITEM:
+                r = 16;
+                break;
+            case EntityKind.OCTPATH:
+                r = 16;
+                break;
+            case EntityKind.REVERSE_ITEM:
                 r = 16;
                 break;
         }
